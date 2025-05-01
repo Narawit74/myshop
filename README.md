@@ -37,6 +37,8 @@ python manage.py runserver
 ```
 จะสามารถเข้าไปดูแอปของคุณได้ที่ http://127.0.0.1:8000/ ในเบราว์เซอร์
 
+[![Watch the video](https://img.youtube.com/vi/KDQ1o1Nxqc8/hqdefault.jpg)](https://youtu.be/KDQ1o1Nxqc8)
+
 ## 🖼 ตัวอย่างภาพ IT_City (ใช้สำหรับการศึกษาเท่านั้น)
 
 ![screenshot](https://github.com/Narawit74/myshop/blob/master/it_city.jpg?raw=true)
