@@ -1,0 +1,49 @@
+{% extends 'shop/base.html' %}
+{% load humanize %}
+{% block title %}ประวัติการสั่งซื้อ{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    {% if orders %}
+    {% for order in orders %}
+    <div class="card mb-3">
+        <div class="card-header">
+            คำสั่งซื้อ #{{ order.order_number }} - {{ order.created_at|date:"d M Y H:i" }}
+            {% if order.status == 'Pending' %}
+            <span class="badge bg-warning text-dark float-end">รอดำเนินการ</span>
+            {% elif order.status == 'Shipped' %}
+            <span class="badge bg-info text-dark float-end">กำลังจัดส่ง</span>
+            {% elif order.status == 'Delivered' %}
+            <span class="badge bg-success float-end">จัดส่งแล้ว</span>
+            {% elif order.status == 'Cancelled' %}
+            <span class="badge bg-danger float-end">ยกเลิกแล้ว</span>
+            {% else %}
+            <span class="badge bg-secondary float-end">{{ order.status }}</span>
+            {% endif %}
+        </div>
+        <ul class="list-group list-group-flush">
+            {% for item in order.items.all %}
+            <li class="list-group-item d-flex justify-content-between">
+                {{ item.product.name }} x{{ item.quantity }}
+                <span>{{ item.get_subtotal|floatformat:0|intcomma }} บาท</span>
+            </li>
+            {% endfor %}
+            <li class="list-group-item fw-bold d-flex justify-content-between align-items-center">
+                <div>
+                    {% if order.payment_method == 'promptpay' %}
+                     <i class="bi bi-phone text-primary"></i> พร้อมเพย์
+                    {% else %}
+                        <i class="bi bi-wallet2 text-secondary"></i> {{ order.payment_method }}
+                    {% endif %}
+                </div>
+                <div>
+                    รวม: {{ order.total_price|floatformat:0|intcomma }} บาท
+                </div>
+            </li>
+        </ul>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>คุณยังไม่มีประวัติการสั่งซื้อ</p>
+    {% endif %}
+</div>
+{% endblock %}

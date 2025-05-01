@@ -1,0 +1,27 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+  <div class="container my-5">
+    <form method="post" class="bg-white p-4 rounded shadow-sm">
+      {% csrf_token %}
+      
+      <div class="mb-3">
+        <label for="id_name" class="form-label">ชื่อหมวดหมู่</label>
+        {{ form.name }}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_description" class="form-label">รายละเอียด</label>
+        {{ form.description }}
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-sm">
+        <i class="bi bi-save"></i> บันทึกการแก้ไข
+      </button>
+      <a href="{% url 'shop:admin_category_list' %}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left-circle"></i> ยกเลิก
+      </a>
+    </form>
+  </div>
+
+{% endblock %}

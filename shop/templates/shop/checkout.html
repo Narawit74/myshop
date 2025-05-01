@@ -1,0 +1,114 @@
+{% extends 'shop/base.html' %}
+{% load humanize %}
+{% load custom_filters %}
+{% block title %}ชำระเงิน{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <table class="table table-bordered mt-3">
+        <thead class="table-light">
+            <tr>
+                <th>สินค้า</th>
+                <th>จำนวน</th>
+                <th>ราคาต่อหน่วย</th>
+                <th>ราคารวม</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.product.price|floatformat:0|intcomma }}</td>
+                <td>{{ item.product.price|multiply:item.quantity|floatformat:0|intcomma }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="table-secondary fw-bold">
+                <td colspan="3" class="text-end">รวมทั้งหมด</td>
+                <td>{{ total_price|floatformat:2 }} บาท</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if user_profile %}
+    <div class="border p-3 rounded bg-light">
+        <button class="btn btn-outline-info w-100 mb-3" type="button" data-bs-toggle="collapse"
+            data-bs-target="#addressCollapse" aria-expanded="true" aria-controls="addressCollapse">
+            <i class="bi bi-chevron-down" style="font-size: 0.75rem;"></i> ดู/ซ่อนที่อยู่
+        </button>
+        <div class="collapse show" id="addressCollapse">
+            <div class="row">
+                <div class="col-md-4 mb-2">
+                    <label class="text-muted small"><strong>ชื่อ-นามสกุล:</strong></label>
+                    <p class="text-muted small">{{ request.user.first_name }} {{ request.user.last_name }}</p>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <label class="text-muted small"><strong>ที่อยู่:</strong></label>
+                    <p class="text-muted small">{{ user_profile.address }}</p>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <label class="text-muted small"><strong>เมือง:</strong></label>
+                    <p class="text-muted small">{{ user_profile.city }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-2">
+                    <label class="text-muted small"><strong>จังหวัด:</strong></label>
+                    <p class="text-muted small">{{ user_profile.province }}</p>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <label class="text-muted small"><strong>รหัสไปรษณีย์:</strong></label>
+                    <p class="text-muted small">{{ user_profile.postcode }}</p>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <label class="text-muted small"><strong>โทรศัพท์:</strong></label>
+                    <p class="text-muted small">{{ user_profile.phone }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning">
+        กรุณากรอกข้อมูลที่อยู่ในโปรไฟล์ก่อน
+        <a href="{% url 'shop:profile' %}" class="btn btn-sm btn-primary float-end">ไปยังโปรไฟล์</a>
+    </div>
+    {% endif %}
+
+    {% if user_profile %}
+    <h5 class="mt-4">เลือกวิธีการชำระเงิน</h5>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="payment_method">เลือกวิธีการชำระเงิน</label>
+            <select name="payment_method" id="payment_method" class="form-select mb-3" required>
+                <option value="promptpay">PromptPay</option>
+            </select>
+        </div>
+
+        <!-- ปุ่มยืนยันการชำระเงิน -->
+        <button type="submit" class="btn btn-sm btn-success float-end">
+            <i class="bi bi-check-circle"></i> ยืนยันการสั่งซื้อ
+        </button>
+
+        <!-- ปุ่มยกเลิกการสั่งซื้อ -->
+        <button type="button" class="btn btn-secondary btn-sm" onclick="return cancelOrder();">
+            <i class="bi bi-x-circle-fill"></i> ยกเลิกการสั่งซื้อ
+        </button>
+    </form>
+    {% endif %}
+
+    <script>
+        function cancelOrder() {
+            // ใช้กล่องยืนยันเพื่อให้ผู้ใช้ยืนยันการยกเลิกการสั่งซื้อ
+            var result = confirm('คุณแน่ใจหรือว่าต้องการยกเลิกการสั่งซื้อ?');
+            if (result) {
+                // เปลี่ยนเส้นทางไปที่หน้าอื่น เช่น หน้า Cart หรือ หน้าอื่นที่เหมาะสม
+                window.location.href = "{% url 'shop:cart_detail' %}";  // เปลี่ยนเป็น URL ที่ต้องการ
+            }
+            return false;  // ไม่ให้ทำการ submit form
+        }
+    </script>
+
+</div>
+
+{% endblock %}

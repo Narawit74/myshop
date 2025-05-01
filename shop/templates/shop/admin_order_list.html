@@ -1,0 +1,60 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<form method="POST">
+  {% csrf_token %}
+  <div class="container mt-4">
+    <table class="table table-bordered">
+      <thead class="thead-light">
+        <tr>
+          <th>Order Number</th>
+          <th>User</th>
+          <th>Total Price</th>
+          <th>Status</th>
+          <th>Created At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td>{{ order.order_number }}</td>
+          <td>{{ order.user }}</td>
+          <td>{{ order.total_price }}</td>
+          <td>
+            <select class="form-control btn-sm" name="status_{{ order.id }}">
+              {% for status_value, status_display in order.STATUS_CHOICES %}
+                <option value="{{ status_value }}" {% if order.status == status_value %}selected{% endif %}>
+                  {{ status_display }}
+                </option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>{{ order.created_at }}</td>
+          <td>
+            <button class="btn btn-sm
+              {% if order.status == 'Cancelled' %}btn-secondary
+              {% elif order.status == 'Delivered' %}btn-success
+              {% else %}btn-primary
+              {% endif %}" 
+              type="submit" 
+              name="order_id" 
+              value="{{ order.id }}" 
+              {% if order.status == 'Cancelled' or order.status == 'Delivered' %}disabled{% endif %}>
+              
+              {% if order.status == 'Delivered' %}
+                <i class="fas fa-check-circle"></i> Delivered
+              {% elif order.status == 'Cancelled' %}
+                <i class="fas fa-ban"></i> Cancelled
+              {% else %}
+                <i class="fas fa-sync-alt"></i> Update Status
+              {% endif %}
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}การชำระเงิน{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <div class="alert alert-success">
+        <h4 class="mb-3">ชำระเงินสำเร็จแล้ว</h4>
+        <p>เลขที่คำสั่งซื้อของคุณคือ <strong>{{ order.order_number }}</strong></p>
+        <p>กำลังนำคุณกลับไปยังหน้าสินค้าในอีกไม่กี่วินาที...</p>
+    </div>
+</div>
+
+<script>
+    setTimeout(function() {
+        window.location.href = "{% url 'shop:order_history' %}";
+    }, 7000);
+</script>
+{% endblock %}

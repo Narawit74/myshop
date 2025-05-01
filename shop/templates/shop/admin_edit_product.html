@@ -1,0 +1,88 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}แก้ไขสินค้า{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <form method="post" enctype="multipart/form-data" class="bg-white p-4 rounded shadow-sm">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label for="name" class="form-label">ชื่อสินค้า</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{ product.name }}">
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label">รายละเอียด</label>
+      <textarea class="form-control" id="description" name="description" rows="5">{{ product.description }}</textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="price" class="form-label">ราคาสินค้า (บาท)</label>
+      <input type="number" class="form-control" id="price" name="price" value="{{ product.price }}">
+    </div>
+
+    <div class="mb-3">
+      <label for="stock" class="form-label">จำนวนในสต๊อก</label>
+      <input type="number" class="form-control" id="stock" name="stock" value="{{ product.stock }}">
+    </div>
+
+    <div class="mb-3">
+      <label for="category" class="form-label">หมวดหมู่</label>
+      <select class="form-select" id="category" name="category">
+        {% for category in categories %}
+          <option value="{{ category.id }}" {% if product.category.id == category.id %}selected{% endif %}>
+            {{ category.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="image" class="form-label">อัปโหลดรูปสินค้า (เพิ่มรูปภาพใหม่)</label>
+      <input type="file" class="form-control" id="image" name="image" multiple>
+
+      {% if request.session.product_images %}
+        <div class="mt-2">
+          <h5>รูปภาพที่เลือก</h5>
+          <div class="d-flex justify-content-center flex-wrap">
+            {% for image in request.session.product_images %}
+              <div class="m-2 position-relative">
+                <img src="{{ image.url }}" class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;" alt="{{ product.name }}">
+                <a href="{% url 'shop:remove_uploaded_image' image.id %}" class="btn btn-danger btn-sm position-absolute bottom-0 end-0 m-2">
+                  <i class="bi bi-trash"></i> ลบ
+                </a>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="mb-3">
+      <h5>รูปภาพปัจจุบัน</h5>
+      <div class="d-flex justify-content-center flex-wrap">
+        {% for image in product_images %}
+          <div class="m-2 position-relative">
+            <img src="{{ image.image.url }}" class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;" alt="{{ product.name }}">
+            {% if image.is_primary %}
+              <p class="position-absolute top-0 start-0 bg-primary text-white p-1">Primary Image</p>
+            {% endif %}
+            <a href="{% url 'shop:delete_image' image.id %}" class="btn btn-danger btn-sm position-absolute bottom-0 end-0 m-2">
+              <i class="bi bi-trash"></i> ลบ
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-sm">
+      <i class="bi bi-save"></i> บันทึกการแก้ไข
+    </button>
+    <a href="{% url 'shop:admin_product_list' %}" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left-circle"></i> กลับ
+    </a>
+  </form>
+</div>
+
+{% endblock %}

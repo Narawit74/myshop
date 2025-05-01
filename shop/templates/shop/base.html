@@ -1,0 +1,170 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}MyShop{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="border-bottom shadow-sm bg-primary">
+    <div class="container py-2">
+      <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <!-- Logo -->
+        <a href="{% url 'shop:product_list' %}" class="navbar-brand text-white fw-bold fs-4">
+          <img src="https://www.itcity.in.th/images/footer-logo.svg" alt="IT CITY" height="40" class="me-2">
+          <!-- IT CITY -->
+        </a>
+  
+        <!-- Right section -->
+        <div class="d-flex align-items-center gap-3">
+          <!-- Cart Icon -->
+          <a href="{% url 'shop:cart_detail' %}" class="text-white position-relative">
+            <i class="bi bi-cart3 fs-4"></i>
+            {% if cart_total_items %}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ cart_total_items }}
+            </span>
+            {% endif %}
+          </a>
+  
+          <!-- Account Dropdown -->
+          {% if user.is_authenticated %}
+          <div class="dropdown">
+            <a class="text-white d-flex align-items-center" href="#" id="dropdownMenuButton" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <img src="{% static 'img/profile.jpg' %}" alt="" width="30px" class="rounded-circle">
+              <span class="ms-2 text-white">{{ user.username }}</span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <li><a class="dropdown-item text-dark" href="{% url 'shop:profile' %}"><i class="bi bi-person"></i>
+                  โปรไฟล์ของฉัน</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item text-dark" href="{% url 'shop:order_history' %}"><i class="bi bi-clock-history"></i>
+                  ประวัติการสั่งซื้อ</a></li>
+  
+              {% if user.is_staff %}
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item text-dark" href="{% url 'shop:admin_user_list' %}"><i class="bi bi-gear"></i>
+                จัดการบัญชี</a></li>
+              <li><a class="dropdown-item text-dark" href="{% url 'shop:admin_order_list' %}"><i class="bi bi-gear"></i>
+                จัดการคำสั่งซื้อ</a></li>
+              <li><a class="dropdown-item text-dark" href="{% url 'shop:admin_product_list' %}"><i class="bi bi-gear"></i>
+                  จัดการสินค้า</a></li>
+              {% endif %}
+  
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item text-dark" href="{% url 'shop:logout' %}"><i class="bi bi-box-arrow-right"></i>
+                  ออกจากระบบ</a></li>
+            </ul>
+          </div>
+          {% else %}
+          <a href="{% url 'shop:login' %}" class="btn btn-outline-light btn-sm">Login</a>
+          <a href="{% url 'shop:register' %}" class="btn btn-light btn-sm">Register</a>
+          {% endif %}
+  
+        </div>
+      </div>
+    </div>
+  </header>
+  
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} text-center m-0">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <div class="container py-5">
+    <div class="row text-center">
+      <div class="col-md-3 mb-4">
+        <img src="https://res.cloudinary.com/itcity-production/image/upload/f_png,q_80,w_70/v1711441192/offering/logo/tqbeu9esfhl57kbvkzdc.png" alt="IT City Logo" class="img-fluid" style="max-width: 200px;">
+        <p class="mt-2">ส่งฟรีทั่วไทยเมื่อช้อปครบ 500.- ขึ้นไป</p>
+      </div>
+      <div class="col-md-3 mb-4">
+        <img src="https://res.cloudinary.com/itcity-production/image/upload/f_png,q_80,w_70/v1711441267/offering/logo/jqqx8mppyw9r3nzofd3y.png" alt="IT City Logo" class="img-fluid" style="max-width: 200px;">
+        <p class="mt-2">บริการจัดส่งด่วน ในกรุงเทพและพื้นที่ให้บริการ</p>
+      </div>
+      <div class="col-md-3 mb-4">
+        <img src="https://res.cloudinary.com/itcity-production/image/upload/f_png,q_80,w_70/v1711441222/offering/logo/qt0jiktl43xn9y2eechp.png" alt="IT City Logo" class="img-fluid" style="max-width: 200px;">
+        <p class="mt-2">ดีลพิเศษทุกวัน ราคาดี พร้อมช้อป 24 ชม.</p>
+      </div>
+      <div class="col-md-3 mb-4">
+        <img src="https://res.cloudinary.com/itcity-production/image/upload/f_png,q_80,w_70/v1711441296/offering/logo/biq3sgeq7899qrt3jwvs.png" alt="IT City Logo" class="img-fluid" style="max-width: 200px;">
+        <p class="mt-2">เปลี่ยนง่าย บริการสบายใจ ด้วยจุดบริการมากกว่า 350 สาขา</p>
+      </div>
+    </div>
+  </div>  
+  
+  <footer class="bg-primary border-top mt-5">
+    <div class="container py-5">
+      <div class="row">
+        <div class="col-md-3 mb-4">
+          <img src="https://www.itcity.in.th/images/footer-logo.svg" alt="IT City Logo" style="max-width: 200px;">
+        </div>
+        <div class="col-md-3 mb-4">
+          <h5 class="text-white mb-3">บริการลูกค้า</h5>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white text-decoration-none">วิธีการสั่งซื้อ</a></li>
+            <li><a href="#" class="text-white text-decoration-none">นโยบายการคืนสินค้า</a></li>
+            <li><a href="#" class="text-white text-decoration-none">คำถามที่พบบ่อย</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4">
+          <h5 class="text-white mb-3">ติดตามเรา</h5>
+          <ul class="list-unstyled d-flex gap-3">
+            <li><a href="#" class="text-white fs-4"><i class="bi bi-facebook"></i></a></li>
+            <li><a href="#" class="text-white fs-4"><i class="bi bi-instagram"></i></a></li>
+            <li><a href="#" class="text-white fs-4"><i class="bi bi-line"></i></a></li>
+            <li><a href="#" class="text-white fs-4"><i class="bi bi-youtube"></i></a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4">
+          <h5 class="text-white mb-3">ติดต่อเรา</h5>
+          <p class="text-white small mb-1"><i class="bi bi-geo-alt"></i> 123/45 ถนนสุขุมวิท, กรุงเทพฯ</p>
+          <p class="text-white small mb-1"><i class="bi bi-telephone"></i> 02-123-4567</p>
+          <p class="text-white small"><i class="bi bi-envelope"></i> support@itcity.com</p>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white py-3 border-top">
+      <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <p class="mb-0 text-muted small">&copy; 2025 IT CITY. All rights reserved.</p>
+        <div class="d-flex gap-2 mt-2 mt-md-0">
+          <a href="#" class="text-muted small text-decoration-none">Privacy Policy</a>
+          <span class="text-muted">|</span>
+          <a href="#" class="text-muted small text-decoration-none">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

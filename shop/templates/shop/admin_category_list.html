@@ -1,0 +1,43 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+  <div class="container my-5">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ชื่อหมวดหมู่</th>
+          <th>รายละเอียด</th>
+          <th>แก้ไข</th>
+          <th>ลบ</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for category in categories %}
+          <tr>
+            <td>{{ category.name }}</td>
+            <td>{{ category.description }}</td>
+            <td>
+              <a href="{% url 'shop:admin_edit_category' category.id %}" class="btn btn-primary btn-sm">
+                <i class="fa fa-edit"></i> แก้ไข
+              </a>
+            </td>
+            <td>
+              <form action="{% url 'shop:admin_delete_category' category.id %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('คุณต้องการลบหมวดหมู่นี้หรือไม่?')">
+                  <i class="fa fa-trash"></i> ลบ
+                </button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="mb-3 text-start">
+      <a href="{% url 'shop:admin_add_product' %}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left-circle"></i> กลับ
+      </a>
+    </div>
+  </div>
+{% endblock %}

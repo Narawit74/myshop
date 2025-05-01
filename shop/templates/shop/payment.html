@@ -1,0 +1,22 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}การชำระเงิน{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <div class="alert alert-success">
+        <h4 class="mb-3">การชำระเงิน</h4>
+        <img src="{% static 'img/logo-promptpay.png' %}" alt="IT CITY" height="450px" class="me-2">
+        <p>โปรดรอการยืนยันการชำระเงินจากระบบ.</p>
+        <p>คุณจะถูกนำไปที่หน้าสำเร็จหลังจากที่ระบบยืนยันการชำระเงิน.</p>
+    </div>
+</div>
+
+<script>
+    setTimeout(function() {
+        // เปลี่ยนไปหน้า order_success หลังจากรอ 5 วินาที
+        window.location.href = "{% url 'shop:order_success' order_number=request.session.checkout_data.order_number %}";
+    }, 7000);  // 5000 มิลลิวินาที = 5 วินาที
+</script>
+{% endblock %}

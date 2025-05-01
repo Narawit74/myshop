@@ -1,0 +1,16 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+  <h1>แก้ไขสถานะคำสั่งซื้อ #{{ order.order_number }}</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="id_status">สถานะคำสั่งซื้อ</label>
+      {{ form.status }}
+    </div>
+    
+    <button type="submit" class="btn btn-primary">บันทึกการเปลี่ยนแปลง</button>
+    <a href="{% url 'shop:admin_order_list' %}" class="btn btn-secondary">ยกเลิก</a>
+  </form>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}เข้าสู่ระบบ - IT City{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center mt-5 mb-5" style="min-height: 80vh;">
+    <div class="w-100" style="max-width: 450px;">
+        <div class="text-center mb-4">
+            <img src="{% static 'img/logo.png' %}" alt="IT City" style="height: 50px;" class="mb-3">
+            <h3 class="fw-bold text-primary">เข้าสู่ระบบ</h3>
+            <p class="text-muted small">กรอกชื่อผู้ใช้งานและรหัสผ่านของคุณ</p>
+        </div>
+
+        <div class="card shadow rounded-4 border-0">
+            <div class="card-body px-4 py-4">
+                <form method="POST" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger small">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group mb-3">
+                        <label for="id_username" class="form-label">ชื่อผู้ใช้งาน</label>
+                        <input type="text" name="username" id="id_username" class="form-control" required>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="id_password" class="form-label">รหัสผ่าน</label>
+                        <input type="password" name="password" id="id_password" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3 text-left">
+                        <a href="#" class="text-decoration-none small text-primary">ลืมรหัสผ่าน?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill fw-semibold">
+                        เข้าสู่ระบบ
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <p class="text-center mt-4 small">
+            ยังไม่มีบัญชี? <a href="{% url 'shop:register' %}" class="text-primary fw-semibold">สมัครสมาชิก</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

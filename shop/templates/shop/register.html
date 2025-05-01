@@ -1,0 +1,55 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}สมัครสมาชิก - IT City{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center mt-5 mb-5" style="min-height: 80vh;">
+    <div class="w-100" style="max-width: 500px;">
+        <div class="text-center mb-4">
+            <img src="{% static 'img/logo.png' %}" alt="IT City" style="height: 50px;" class="mb-3">
+            <h3 class="fw-bold text-primary">สมัครสมาชิก</h3>
+            <p class="text-muted small">กรอกข้อมูลด้านล่างเพื่อสร้างบัญชีของคุณ</p>
+        </div>
+
+        <div class="card shadow rounded-4 border-0">
+            <div class="card-body px-4 py-4">
+                <form method="POST" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger small">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {{ form.as_p }}
+
+                    <div class="form-check mt-3 mb-4">
+                        <input type="checkbox" class="form-check-input" id="accept_terms" name="accept_terms" required>
+                        <label class="form-check-label small text-muted" for="accept_terms">
+                            ฉันยอมรับ <a href="#" class="text-primary text-decoration-none">นโยบายความเป็นส่วนตัว</a> และ 
+                            <a href="#" class="text-primary text-decoration-none">ข้อตกลงในการใช้บริการ</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill fw-semibold">
+                        สมัครสมาชิก
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <p class="text-center mt-4 small">
+            มีบัญชีอยู่แล้ว? <a href="{% url 'shop:login' %}" class="text-primary fw-semibold">เข้าสู่ระบบ</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
